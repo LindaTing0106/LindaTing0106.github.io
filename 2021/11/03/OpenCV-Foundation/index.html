@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/bitbug_favicon_32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/bitbug_favicon_16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/library/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lindating0106.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="OpenCV做基本讀取圖片、寫入圖片等功能引入 python 模組12import numpy as npimport cv2 使用 cv2 讀取圖片以 cv2.imread 讀進來的資料，會儲存成一個 NumPy 的陣列。 1cv2.imread(&quot;image.jpg&quot;) NumPy 陣列的前兩個維度分別是圖片的高度與寬度，第三個維度則是圖片的 channel（RGB 彩色圖">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenCV Foundation">
+<meta property="og:url" content="http://lindating0106.github.io/2021/11/03/OpenCV-Foundation/index.html">
+<meta property="og:site_name" content="Linda&#39;s Blog">
+<meta property="og:description" content="OpenCV做基本讀取圖片、寫入圖片等功能引入 python 模組12import numpy as npimport cv2 使用 cv2 讀取圖片以 cv2.imread 讀進來的資料，會儲存成一個 NumPy 的陣列。 1cv2.imread(&quot;image.jpg&quot;) NumPy 陣列的前兩個維度分別是圖片的高度與寬度，第三個維度則是圖片的 channel（RGB 彩色圖">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="http://lindating0106.github.io/2021/11/03/OpenCV-Foundation/resize_ex.png">
+<meta property="og:image" content="http://lindating0106.github.io/2021/11/03/OpenCV-Foundation/OpenCV_Rotation.png">
+<meta property="og:image" content="http://lindating0106.github.io/2021/11/03/OpenCV-Foundation/Imutils_Bound_Rotation.png">
+<meta property="article:published_time" content="2021-11-03T13:05:59.000Z">
+<meta property="article:modified_time" content="2021-11-04T08:14:45.015Z">
+<meta property="article:author" content="Linda Ting">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lindating0106.github.io/2021/11/03/OpenCV-Foundation/resize_ex.png">
+
+<link rel="canonical" href="http://lindating0106.github.io/2021/11/03/OpenCV-Foundation/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>OpenCV Foundation | Linda's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Linda's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://lindating0106.github.io/2021/11/03/OpenCV-Foundation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/A-Di.png">
+      <meta itemprop="name" content="Linda Ting">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linda's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenCV Foundation
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2021-11-03 21:05:59" itemprop="dateCreated datePublished" datetime="2021-11-03T21:05:59+08:00">2021-11-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2021-11-04 16:14:45" itemprop="dateModified" datetime="2021-11-04T16:14:45+08:00">2021-11-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="OpenCV做基本讀取圖片、寫入圖片等功能"><a href="#OpenCV做基本讀取圖片、寫入圖片等功能" class="headerlink" title="OpenCV做基本讀取圖片、寫入圖片等功能"></a>OpenCV做基本讀取圖片、寫入圖片等功能</h2><h3 id="引入-python-模組"><a href="#引入-python-模組" class="headerlink" title="引入 python 模組"></a>引入 python 模組</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> cv2</span><br></pre></td></tr></table></figure>
+<h3 id="使用-cv2-讀取圖片"><a href="#使用-cv2-讀取圖片" class="headerlink" title="使用 cv2 讀取圖片"></a>使用 cv2 讀取圖片</h3><p>以 <code>cv2.imread</code> 讀進來的資料，會儲存成一個 NumPy 的陣列。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cv2.imread(<span class="string">&quot;image.jpg&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>NumPy 陣列的前兩個維度分別是圖片的高度與寬度，第三個維度則是圖片的 channel（RGB 彩色圖片的 channel 是 3，灰階圖片則為 1）。</p>
+<span id="more"></span>
+<h3 id="圖片格式"><a href="#圖片格式" class="headerlink" title="圖片格式"></a>圖片格式</h3><p>OpenCV 的 cv2.imread 在讀取圖片時，可以在第二個參數指定圖片的格式，可用的選項有三種：</p>
+<p><code>cv2.IMREAD_COLOR</code><br>此為預設值，這種格式會讀取 RGB 三個 channels 的彩色圖片，而忽略透明度的 channel。<br><code>cv2.IMREAD_GRAYSCALE</code><br>以灰階的格式來讀取圖片。<br><code>cv2.IMREAD_UNCHANGED</code><br>讀取圖片中所有的 channels，包含透明度的 channel。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以灰階的方式讀取圖檔</span></span><br><span class="line">img_gray = cv2.imread(<span class="string">&#x27;image.jpg&#x27;</span>, cv2.IMREAD_GRAYSCALE)</span><br></pre></td></tr></table></figure>
+<h3 id="顯示圖片"><a href="#顯示圖片" class="headerlink" title="顯示圖片"></a>顯示圖片</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 顯示圖片</span></span><br><span class="line">cv2.imshow(<span class="string">&#x27;My Image&#x27;</span>, img)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按下任意鍵則關閉所有視窗</span></span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+<h3 id="寫入圖片檔案"><a href="#寫入圖片檔案" class="headerlink" title="寫入圖片檔案"></a>寫入圖片檔案</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 寫入圖檔</span></span><br><span class="line">cv2.imwrite(<span class="string">&#x27;output.jpg&#x27;</span>, img)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 寫入不同圖檔格式</span></span><br><span class="line">cv2.imwrite(<span class="string">&#x27;output.png&#x27;</span>, img)</span><br><span class="line">cv2.imwrite(<span class="string">&#x27;output.tiff&#x27;</span>, img)</span><br></pre></td></tr></table></figure>
+<h2 id="調整圖片"><a href="#調整圖片" class="headerlink" title="調整圖片"></a>調整圖片</h2><h3 id="裁切部分圖片"><a href="#裁切部分圖片" class="headerlink" title="裁切部分圖片"></a>裁切部分圖片</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># extract a 100x100 pixel square ROI (Region of Interest) from the</span></span><br><span class="line"><span class="comment"># input image starting at x=320,y=60 at ending at x=420,y=160</span></span><br><span class="line">roi = image[<span class="number">60</span>:<span class="number">160</span>, <span class="number">320</span>:<span class="number">420</span>]</span><br><span class="line">cv2.imshow(<span class="string">&quot;ROI&quot;</span>, roi)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p><code>image[startY:endY, startX:endX]</code></p>
+<h3 id="調整圖片大小"><a href="#調整圖片大小" class="headerlink" title="調整圖片大小"></a>調整圖片大小</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># resize the image to 200x200px, ignoring aspect ratio</span></span><br><span class="line">resized = cv2.resize(image, (<span class="number">200</span>, <span class="number">200</span>))</span><br><span class="line">cv2.imshow(<span class="string">&quot;Fixed Resizing&quot;</span>, resized)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>如果原本圖片比率為 3 : 4，而後來需要調整成 1 : 1的圖片，則調整過後的圖片會被壓扁。</p>
+<img src="/2021/11/03/OpenCV-Foundation/resize_ex.png" class="" title="被壓縮過後的狗狗">
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># fixed resizing and distort aspect ratio so let&#x27;s resize the width</span></span><br><span class="line"><span class="comment"># to be 300px but compute the new height based on the aspect ratio</span></span><br><span class="line">r = <span class="number">300.0</span> / w</span><br><span class="line">dim = (<span class="number">300</span>, <span class="built_in">int</span>(h * r))</span><br><span class="line">resized = cv2.resize(image, dim)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Aspect Ratio Resize&quot;</span>, resized)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>利用運算得出寬度縮放比率，再推導出高。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># manually computing the aspect ratio can be a pain so let&#x27;s use the</span></span><br><span class="line"><span class="comment"># imutils library instead</span></span><br><span class="line">resized = imutils.resize(image, width=<span class="number">300</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Imutils Resize&quot;</span>, resized)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>利用imutils套件讓原比例縮放變得更容易。</p>
+<h3 id="旋轉圖片"><a href="#旋轉圖片" class="headerlink" title="旋轉圖片"></a>旋轉圖片</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># let&#x27;s rotate an image 45 degrees clockwise using OpenCV by first</span></span><br><span class="line"><span class="comment"># computing the image center, then constructing the rotation matrix,</span></span><br><span class="line"><span class="comment"># and then finally applying the affine warp</span></span><br><span class="line">center = (w // <span class="number">2</span>, h // <span class="number">2</span>)</span><br><span class="line">M = cv2.getRotationMatrix2D(center, -<span class="number">45</span>, <span class="number">1.0</span>)</span><br><span class="line">rotated = cv2.warpAffine(image, M, (w, h))</span><br><span class="line">cv2.imshow(<span class="string">&quot;OpenCV Rotation&quot;</span>, rotated)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p><code>center = (w // 2, h // 2)</code>目的是在於算出整數（忽略 float）。<br><code>M = cv2.getRotationMatrix2D(center, -45, 1.0)</code>設定<code>中心點</code> <code>旋轉角度</code> <code>縮放倍率</code>。<br><code>rotated = cv2.warpAffine(image, M, (w, h))</code>真正對圖片去做更改。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rotation can also be easily accomplished via imutils with less code</span></span><br><span class="line">rotated = imutils.rotate(image, -<span class="number">45</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Imutils Rotation&quot;</span>, rotated)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>使用imutils套件。</p>
+<img src="/2021/11/03/OpenCV-Foundation/OpenCV_Rotation.png" class="" title="旋轉過後角角被裁掉的圖片">
+<p>但在以上兩種方法中，我們可以發現選轉過後的圖片會超過顯示器的邊界，因此我們可以用以下方式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># OpenCV doesn&#x27;t &quot;care&quot; if our rotated image is clipped after rotation</span></span><br><span class="line"><span class="comment"># so we can instead use another imutils convenience function to help</span></span><br><span class="line"><span class="comment"># us out</span></span><br><span class="line">rotated = imutils.rotate_bound(image, <span class="number">45</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Imutils Bound Rotation&quot;</span>, rotated)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<img src="/2021/11/03/OpenCV-Foundation/Imutils_Bound_Rotation.png" class="" title="完整旋轉過圖片">
+<h3 id="模糊圖片"><a href="#模糊圖片" class="headerlink" title="模糊圖片"></a>模糊圖片</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apply a Gaussian blur with a 11x11 kernel to the image to smooth it,</span></span><br><span class="line"><span class="comment"># useful when reducing high frequency noise</span></span><br><span class="line">blurred = cv2.GaussianBlur(image, (<span class="number">11</span>, <span class="number">11</span>), <span class="number">0</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Blurred&quot;</span>, blurred)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="在圖片上畫畫"><a href="#在圖片上畫畫" class="headerlink" title="在圖片上畫畫"></a>在圖片上畫畫</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">output = image.copy()</span><br><span class="line">cv2.rectangle(output, (<span class="number">320</span>, <span class="number">60</span>), (<span class="number">420</span>, <span class="number">160</span>), (<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>), <span class="number">2</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Rectangle&quot;</span>, output)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>img</code> : The destination image to draw upon. We’re drawing on <code>output</code> .</li>
+<li><code>pt1</code> : Our starting pixel coordinate which is the top-left. In our case, the top-left is <code>(320, 60)</code> .</li>
+<li><code>pt2</code> : The ending pixel — bottom-right. The bottom-right pixel is located at <code>(420, 160)</code> .</li>
+<li><code>color</code> : BGR tuple. To represent red, I’ve supplied <code>(0 , 0, 255)</code> .</li>
+<li><code>thickness</code> : Line thickness (a negative value will make a solid rectangle). I’ve supplied a thickness of <code>2</code> .<br>因為我們現在是在控制 cv2 的 function，所以參數放置型態為 (x,y)，而不是 (y,x)。<br>畫一個實心的圓圈：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># draw a blue 20px (filled in) circle on the image centered at</span></span><br><span class="line"><span class="comment"># x=300,y=150</span></span><br><span class="line">output = image.copy()</span><br><span class="line">cv2.circle(output, (<span class="number">300</span>, <span class="number">150</span>), <span class="number">20</span>, (<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>), -<span class="number">1</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Circle&quot;</span>, output)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<code>cv2.circle(output, (300, 150), 20, (255, 0, 0), -1)</code>中的<code>-1</code>代表填滿的意思。<br>在圖中畫線：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># draw a 5px thick red line from x=60,y=20 to x=400,y=200</span></span><br><span class="line">output = image.copy()</span><br><span class="line">cv2.line(output, (<span class="number">60</span>, <span class="number">20</span>), (<span class="number">400</span>, <span class="number">200</span>), (<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>), <span class="number">5</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Line&quot;</span>, output)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+在圖中輸入文字：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># draw green text on the image</span></span><br><span class="line">output = image.copy()</span><br><span class="line">cv2.putText(output, <span class="string">&quot;OpenCV + Jurassic Park!!!&quot;</span>, (<span class="number">10</span>, <span class="number">25</span>), </span><br><span class="line">	cv2.FONT_HERSHEY_SIMPLEX, <span class="number">0.7</span>, (<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>), <span class="number">2</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Text&quot;</span>, output)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure></li>
+<li><code>img</code> : The <code>output</code> image.</li>
+<li><code>text</code> : The <code>string of text</code> we’d like to write/draw on the image.</li>
+<li><code>pt</code> : The <code>starting point</code> for the text.</li>
+<li><code>font</code> : I often use the <code>cv2.FONT_HERSHEY_SIMPLEX</code> . The available fonts are listed here.</li>
+<li><code>scale</code> : <code>Font size</code> multiplier.</li>
+<li><code>color</code> : Text <code>color</code>.</li>
+<li><code>thickness</code> : The thickness of the stroke in pixels.<h2 id="結合其他功能"><a href="#結合其他功能" class="headerlink" title="結合其他功能"></a>結合其他功能</h2><h3 id="導入圖片"><a href="#導入圖片" class="headerlink" title="導入圖片"></a>導入圖片</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># import the necessary packages</span></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> imutils</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="comment"># construct the argument parser and parse the arguments</span></span><br><span class="line">ap = argparse.ArgumentParser()</span><br><span class="line">ap.add_argument(<span class="string">&quot;-i&quot;</span>, <span class="string">&quot;--image&quot;</span>, required=<span class="literal">True</span>,</span><br><span class="line">	<span class="built_in">help</span>=<span class="string">&quot;path to input image&quot;</span>)</span><br><span class="line">args = <span class="built_in">vars</span>(ap.parse_args())</span><br></pre></td></tr></table></figure>
+<code>argparse</code>讓使用者能在不改變原始碼的情況下，編譯器不同的檔案。<br><code>ap.add_argument(&quot;-i&quot;, &quot;--image&quot;, required=True,   help=&quot;path to input image&quot;)</code><br>  如要執行此程式，需在 cmd 中輸入 <code>$python filename.py -i imagepath</code>，就能成功地將需要的圖片放入編譯器中。<br>圖片被存在args[“image”]中。<h3 id="將剛剛導入的圖片轉成灰階"><a href="#將剛剛導入的圖片轉成灰階" class="headerlink" title="將剛剛導入的圖片轉成灰階"></a>將剛剛導入的圖片轉成灰階</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># load the input image (whose path was supplied via command line</span></span><br><span class="line"><span class="comment"># argument) and display the image to our screen</span></span><br><span class="line">image = cv2.imread(args[<span class="string">&quot;image&quot;</span>])</span><br><span class="line">cv2.imshow(<span class="string">&quot;Image&quot;</span>, image)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line"><span class="comment"># convert the image to grayscale</span></span><br><span class="line">gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Gray&quot;</span>, gray)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="偵測圖片邊緣"><a href="#偵測圖片邊緣" class="headerlink" title="偵測圖片邊緣"></a>偵測圖片邊緣</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># applying edge detection we can find the outlines of objects in</span></span><br><span class="line"><span class="comment"># images</span></span><br><span class="line">edged = cv2.Canny(gray, <span class="number">30</span>, <span class="number">150</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Edged&quot;</span>, edged)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<code>cv2.Canny</code> function:</li>
+<li><code>img</code> : The gray image.</li>
+<li><code>minVal</code> : A minimum threshold, in our case 30 .</li>
+<li><code>maxVal</code> : The maximum threshold which is 150 in our example.</li>
+<li><code>aperture_size</code> : The Sobel kernel size. By default this value is 3 and hence is not shown .<h3 id="影像分割-二值化"><a href="#影像分割-二值化" class="headerlink" title="影像分割_二值化"></a>影像分割_二值化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># threshold the image by setting all pixel values less than 225</span></span><br><span class="line"><span class="comment"># to 255 (white; foreground) and all pixel values &gt;= 225 to 255</span></span><br><span class="line"><span class="comment"># (black; background), thereby segmenting the image</span></span><br><span class="line">thresh = cv2.threshold(gray, <span class="number">225</span>, <span class="number">255</span>, cv2.THRESH_BINARY_INV)[<span class="number">1</span>]</span><br><span class="line">cv2.imshow(<span class="string">&quot;Thresh&quot;</span>, thresh)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure></li>
+<li>using <code>cv2.THRESH_BINARY_INV</code>，使閥值大於225的pixels變成黑色 (0)，而閥值小於225的pixels變成白色 (255)。</li>
+<li><code>255</code>為最大灰階值，如調成 <code>200</code>，則白色變為灰色。<h3 id="偵測和畫輪廓線"><a href="#偵測和畫輪廓線" class="headerlink" title="偵測和畫輪廓線"></a>偵測和畫輪廓線</h3>沿用剛剛已二值化的圖像。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># find contours (i.e., outlines) of the foreground objects in the</span></span><br><span class="line"><span class="comment"># thresholded image</span></span><br><span class="line">cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,</span><br><span class="line">	cv2.CHAIN_APPROX_SIMPLE)</span><br><span class="line">cnts = imutils.grab_contours(cnts)</span><br><span class="line">output = image.copy()</span><br><span class="line"><span class="comment"># loop over the contours</span></span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> cnts:</span><br><span class="line">	<span class="comment"># draw each contour on the output image with a 3px thick purple</span></span><br><span class="line">	<span class="comment"># outline, then display the output contours one at a time</span></span><br><span class="line">	cv2.drawContours(output, [c], -<span class="number">1</span>, (<span class="number">240</span>, <span class="number">0</span>, <span class="number">159</span>), <span class="number">3</span>)</span><br><span class="line">	cv2.imshow(<span class="string">&quot;Contours&quot;</span>, output)</span><br><span class="line">	cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<code>cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,   cv2.CHAIN_APPROX_SIMPLE)</code><br>其中第二個參數放置輪廓的搜索模式：</li>
+<li><code>cv2.RETR_LIST</code>：檢測的輪廓不建立等級關係（沒有父輪廓、內嵌輪廓）</li>
+<li><code>cv2.RETR_TREE</code>：建立一個等級樹結構的輪廓。</li>
+<li><code>cv2.RETR_CCOMP</code>：建立兩個等級的輪廓，上面的一層為外邊界，裡面的一層為內層的邊界資訊，若內層中還有輪廓，則這個輪廓被歸類為頂層。</li>
+<li><code>cv2.RETR_EXTERNAL</code>：表示只檢測外輪廓。<br>第三個參數為輪廓的近似辦法：</li>
+<li><code>cv2.CHAIN_APPROX_NONE</code>：儲存所有的輪廓點，相鄰的兩個點的畫素位置差不超過1，即max（abs（x1-x2），abs（y2-y1））==1。</li>
+<li><code>cv2.CHAIN_APPROX_SIMPLE</code>：只存轉彎角的資訊。</li>
+<li><code>cv2.CHAIN_APPROX_TC89_L1</code>，<code>CV_CHAIN_APPROX_TC89_KCOS</code>使用teh-Chinl chain 近似演算法。<br>顯示出圖上有幾個物件：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># draw the total number of contours found in purple</span></span><br><span class="line">text = <span class="string">&quot;I found &#123;&#125; objects!&quot;</span>.<span class="built_in">format</span>(<span class="built_in">len</span>(cnts))</span><br><span class="line">cv2.putText(output, text, (<span class="number">10</span>, <span class="number">25</span>),  cv2.FONT_HERSHEY_SIMPLEX, <span class="number">0.7</span>,</span><br><span class="line">	(<span class="number">240</span>, <span class="number">0</span>, <span class="number">159</span>), <span class="number">2</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Contours&quot;</span>, output)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="壓縮和擴張"><a href="#壓縮和擴張" class="headerlink" title="壓縮和擴張"></a>壓縮和擴張</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># we apply erosions to reduce the size of foreground objects</span></span><br><span class="line">mask = thresh.copy()</span><br><span class="line">mask = cv2.erode(mask, <span class="literal">None</span>, iterations=<span class="number">5</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Eroded&quot;</span>, mask)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+把二值化圖的物件大小縮小<code>5 iterations</code>。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># similarly, dilations can increase the size of the ground objects</span></span><br><span class="line">mask = thresh.copy()</span><br><span class="line">mask = cv2.dilate(mask, <span class="literal">None</span>, iterations=<span class="number">5</span>)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Dilated&quot;</span>, mask)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+把二值化圖的物件大小放大<code>5 iterations</code>。<h3 id="Masking-and-bitwise-operations"><a href="#Masking-and-bitwise-operations" class="headerlink" title="Masking and bitwise operations"></a>Masking and bitwise operations</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a typical operation we may want to apply is to take our mask and</span></span><br><span class="line"><span class="comment"># apply a bitwise AND to our input image, keeping only the masked</span></span><br><span class="line"><span class="comment"># regions</span></span><br><span class="line">mask = thresh.copy()</span><br><span class="line">output = cv2.bitwise_and(image, image, mask=mask)</span><br><span class="line">cv2.imshow(<span class="string">&quot;Output&quot;</span>, output)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<blockquote>
+<p><em>參考資料：<a target="_blank" rel="noopener" href="https://www.pyimagesearch.com/2018/07/19/opencv-tutorial-a-guide-to-learn-opencv/">https://www.pyimagesearch.com/2018/07/19/opencv-tutorial-a-guide-to-learn-opencv/</a></em></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/30/To-Go%20list/" rel="prev" title="To-Do list">
+      <i class="fa fa-chevron-left"></i> To-Do list
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OpenCV%E5%81%9A%E5%9F%BA%E6%9C%AC%E8%AE%80%E5%8F%96%E5%9C%96%E7%89%87%E3%80%81%E5%AF%AB%E5%85%A5%E5%9C%96%E7%89%87%E7%AD%89%E5%8A%9F%E8%83%BD"><span class="nav-number">1.</span> <span class="nav-text">OpenCV做基本讀取圖片、寫入圖片等功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5-python-%E6%A8%A1%E7%B5%84"><span class="nav-number">1.1.</span> <span class="nav-text">引入 python 模組</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-cv2-%E8%AE%80%E5%8F%96%E5%9C%96%E7%89%87"><span class="nav-number">1.2.</span> <span class="nav-text">使用 cv2 讀取圖片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%96%E7%89%87%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">圖片格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%AF%E7%A4%BA%E5%9C%96%E7%89%87"><span class="nav-number">1.4.</span> <span class="nav-text">顯示圖片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%AB%E5%85%A5%E5%9C%96%E7%89%87%E6%AA%94%E6%A1%88"><span class="nav-number">1.5.</span> <span class="nav-text">寫入圖片檔案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AA%BF%E6%95%B4%E5%9C%96%E7%89%87"><span class="nav-number">2.</span> <span class="nav-text">調整圖片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A3%81%E5%88%87%E9%83%A8%E5%88%86%E5%9C%96%E7%89%87"><span class="nav-number">2.1.</span> <span class="nav-text">裁切部分圖片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AA%BF%E6%95%B4%E5%9C%96%E7%89%87%E5%A4%A7%E5%B0%8F"><span class="nav-number">2.2.</span> <span class="nav-text">調整圖片大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%8B%E8%BD%89%E5%9C%96%E7%89%87"><span class="nav-number">2.3.</span> <span class="nav-text">旋轉圖片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E7%B3%8A%E5%9C%96%E7%89%87"><span class="nav-number">2.4.</span> <span class="nav-text">模糊圖片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%9C%96%E7%89%87%E4%B8%8A%E7%95%AB%E7%95%AB"><span class="nav-number">2.5.</span> <span class="nav-text">在圖片上畫畫</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B5%90%E5%90%88%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD"><span class="nav-number">3.</span> <span class="nav-text">結合其他功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8E%E5%85%A5%E5%9C%96%E7%89%87"><span class="nav-number">3.1.</span> <span class="nav-text">導入圖片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%87%E5%89%9B%E5%89%9B%E5%B0%8E%E5%85%A5%E7%9A%84%E5%9C%96%E7%89%87%E8%BD%89%E6%88%90%E7%81%B0%E9%9A%8E"><span class="nav-number">3.2.</span> <span class="nav-text">將剛剛導入的圖片轉成灰階</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%B5%E6%B8%AC%E5%9C%96%E7%89%87%E9%82%8A%E7%B7%A3"><span class="nav-number">3.3.</span> <span class="nav-text">偵測圖片邊緣</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%B1%E5%83%8F%E5%88%86%E5%89%B2-%E4%BA%8C%E5%80%BC%E5%8C%96"><span class="nav-number">3.4.</span> <span class="nav-text">影像分割_二值化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%B5%E6%B8%AC%E5%92%8C%E7%95%AB%E8%BC%AA%E5%BB%93%E7%B7%9A"><span class="nav-number">3.5.</span> <span class="nav-text">偵測和畫輪廓線</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A3%93%E7%B8%AE%E5%92%8C%E6%93%B4%E5%BC%B5"><span class="nav-number">3.6.</span> <span class="nav-text">壓縮和擴張</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Masking-and-bitwise-operations"><span class="nav-number">3.7.</span> <span class="nav-text">Masking and bitwise operations</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Linda Ting"
+      src="/images/A-Di.png">
+  <p class="site-author-name" itemprop="name">Linda Ting</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fas fa-carrot"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Linda Ting</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/library/anime.min.js"></script>
+  <script src="/library/velocity/velocity.min.js"></script>
+  <script src="/library/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
